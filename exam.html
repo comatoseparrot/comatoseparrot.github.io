@@ -31,9 +31,9 @@
         canvas.height = 700;
 
         // VARIABLES
-        var initialX = 350, initialY = 225, dir = 0, speed = 0, moves = 0; // previous initial 225x225
-        let randomY = randomIntFromInterval(50, (canvas.height-50));
-        let randomX = randomIntFromInterval(50, (canvas.width-50));
+        var initialX = 360, initialY = 410, dir = 0, speed = 0, moves = 0; // previous initial 225x225
+        let randomX = randomIntFromInterval(150, (550)); //(50, (canvas.width-50));
+        let randomY =randomIntFromInterval(250, (550)); //(50, (canvas.height-50));
         let score = 0;
         let time = 0;
         let timerInterval;
@@ -49,6 +49,8 @@
         const homer = new Image();
         const donut = new Image();
         const golden = new Image();
+        const pillarFire = new Image();
+        const box = new Image();
         // Audio
         const hurt = new Audio("./sound/hurt.mp3");
         const eating = new Audio("./sound/eating.mp3");
@@ -58,7 +60,7 @@
 
         // Volume
         music.loop = true; 
-        music.volume = 0.3; // 30%
+        music.volume = 0.2; // 30%
         hurt.volume = 0.5;
         eating.volume = 0.7;
         celebrate.volume = 0.4;
@@ -67,6 +69,8 @@
         homer.src = "./image/homer.png";
         donut.src = "./image/donut.png";
         golden.src =  "./image/golden.png";
+        pillarFire.src = "./image/pillar2.png";
+        box.src = "./image/box.png";
 
         // List of colors
         let colorBlack = "rgb(0, 0, 0)";
@@ -126,19 +130,19 @@
                 this.y -= speed;
                 moves++;
                 if (this.y + this.size < 0) {
-                    this.y = canvas.height + this.size; //550
+                    this.y = canvas.height + this.size; 
                 }
                 }
                 if (dir == 2) { // FROM TOP TO BOTTOM
                     this.y += speed;
-                    if (this.y + this.size > canvas.height) { //>500
+                    if (this.y + this.size > canvas.height) { 
                         this.y = -this.size;
                     }
                 }
                 if (dir == 3) { // FROM RIGHT TO LEFT
                     this.x += speed;
                     moves++;
-                    if (this.x + this.size > canvas.width) { //>500
+                    if (this.x + this.size > canvas.width) { 
                         this.x = -this.size;
                     }
                 }
@@ -146,10 +150,30 @@
                     this.x -= speed;
                     moves++;
                     if (this.x + this.size < 0) {
-                        this.x = canvas.width + this.size; //550
+                        this.x = canvas.width + this.size; 
                     }
                 }
                 }
+
+
+            checkInnerBox(){
+
+                if (dir === 1 && this.y <= 250){
+                    this.y += speed;
+                }
+                if (dir === 2 && this.y >= 570){
+                    this.y -= speed;
+                }
+
+                if (dir === 3 && this.x >= 570){
+                    this.x -= speed;
+                }
+
+                if (dir === 4 && this.x <= 150){
+                    this.x += speed;
+                }
+
+            }
 
         }
 
@@ -179,8 +203,8 @@
                 console.log("Objective collision!")
 
                 // Appear inside bounds only
-                this.x = randomIntFromInterval(this.size, (canvas.width-this.size));
-                this.y = randomIntFromInterval(this.size, (canvas.height-this.size));
+                this.x = randomIntFromInterval(150, (550)); // (this.size, (canvas.width-this.size));
+                this.y = randomIntFromInterval(250, (550));
                 
                 if (moves>0 && !pauseStatus){
                 score+=10;
@@ -201,8 +225,8 @@
             }
 
             relocate() {
-                this.x = randomIntFromInterval(this.size, (canvas.width-this.size));
-                this.y = randomIntFromInterval(this.size, (canvas.height-this.size));
+                this.x = randomIntFromInterval(150, (550)); // (this.size, (canvas.width-this.size));
+                this.y = randomIntFromInterval(250, (550));
             }
 
         }
@@ -283,8 +307,26 @@
 
             checkOutofBounds(){
                 if (stage != 1) {
-                    this.x = canvas.width + this.width;
+                    //this.x = canvas.width + this.width; 
+                    pillar1.x = 700;
+                    pillar2.x = 900;
+                    pillar3.x = 1100;
+                    pillar4.x = 1300;
                 }
+                if (stage!= 2){
+                    rain1.y = 0;
+                    rain2.y = 0;
+                    rain3.y = 0;
+                    rain4.y = 0;
+                    rain5.y = 0;
+                    
+                }
+                if (stage!= 3) {
+                    side1.x = 0;
+                    side2.x = 0;
+                    side3.x = 0;
+                    side4.x = 0;
+                }                
             }
         }
 
@@ -316,15 +358,15 @@
 
 
         // stage 3 side
-        const side1 = new ObjectObstacleClass(0, 500, "red", 50, 50);
-        const side2 = new ObjectObstacleClass(0, 600, "red", 50, 50);
-        const side3 = new ObjectObstacleClass(0, 700, "red", 50, 50);
-        const side4 = new ObjectObstacleClass(0, 800, "red", 50, 50);
-        const side5 = new ObjectObstacleClass(0, 900, "red", 50, 50);
+        const side1 = new ObjectObstacleClass(0, 250, "red", 50, 50);
+        const side2 = new ObjectObstacleClass(0, 350, "red", 50, 50);
+        const side3 = new ObjectObstacleClass(0, 450, "red", 50, 50);
+        const side4 = new ObjectObstacleClass(0, 550, "red", 50, 50);
 
         // Populate array 
         pillar.push(pillar1, pillar2, pillar3, pillar4);
         rain.push(rain1, rain2, rain3, rain4, rain5);
+        sides.push(side1, side2, side3, side4);
 
         // TODO depopulate and repopulate obstacle array depending on stage - Not necessary
     
@@ -367,7 +409,7 @@
             )   
             && !e.repeat && !pauseStatus // unrepeated and unpaused
             ) {
-                speed += 5; // Increase speed when Shift or + key is pressed
+                speed += 2; // Increase speed when Shift or + key is pressed
             }
         });
 
@@ -379,8 +421,8 @@
             )   
             && !e.repeat && !pauseStatus // unrepeated and unpaused
             ) {
-                if (speed != 0){
-                speed -= 5; // Deacrease speed
+                if (speed >= 2){
+                speed -= 2; // Deacrease speed
             }
             }
         });
@@ -406,7 +448,7 @@
             } else {
             console.log("UNPAUSE!");
             // Remove gray layer
-            speed = 5;
+            speed = 4;
             pauseStatus = false;
             //console.log(speed);
             startTimer();
@@ -463,7 +505,7 @@
 
         // Draw bottom box
         function drawBoxBottom() {
-            ctx.fillStyle = 'rgb(255, 255, 255)';
+            ctx.fillStyle = 'rgb(248, 248, 242)';
             ctx.fillRect(0, 600, 750, 100);
         }
 
@@ -528,6 +570,7 @@
             
             // Teleport controlled when outside canvas
             objectControlled.checkOutofBounds();
+            objectControlled.checkInnerBox();
 
             // Teleport pillars when outside canvas
             pillar1.checkOutofBounds();
@@ -556,6 +599,13 @@
                 obstacle.checkCollision(objectControlled);
             }
             }
+
+             // sides collision
+            if (!pauseStatus && stage === 3){
+            for (const obstacle of sides) {
+                obstacle.checkCollision(objectControlled);
+            }
+            }
             
             // move pillars
             if (!pauseStatus && stage === 1){
@@ -580,6 +630,14 @@
                 rain5.movement(2);
             }
 
+            // move side
+            if (!pauseStatus && stage === 3){
+                side1.movement(3);
+                side2.movement(3);
+                side3.movement(3);
+                side4.movement(3);
+            }
+
             // At the end of function
             paint();
             window.requestAnimationFrame(update);
@@ -593,7 +651,7 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
              // Draw grid test
-            drawGrid();
+            //drawGrid();
             // Draw array blocks 
            // drawOutlineFromArray(blocksInnerBox, colorBlack, 3); // Pillar block outline NOT WORKING
             drawBlocksFromArray(blocksInnerBox, colorBlack); // NOT WORKING
@@ -626,14 +684,23 @@
             // Draw pillar obstacle objects
             if (!pauseStatus && stage === 1){
             for (const obstacle of pillar) {
-                obstacle.draw();
+                //obstacle.draw();
+                ctx.drawImage(pillarFire, obstacle.x, obstacle.y, obstacle.width, obstacle.height);
             }
             }
 
             // Draw rain obstacle objects
             if (!pauseStatus && stage === 2){
             for (const obstacle of rain) {
-                obstacle.draw();
+                ctx.drawImage(box, obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+            }
+            }
+
+            // Draw side obstacle objects
+            if (!pauseStatus && stage === 3){
+            for (const obstacle of sides) {
+                //obstacle.draw();
+                ctx.drawImage(box, obstacle.x, obstacle.y, obstacle.width, obstacle.height);
             }
             }
 
@@ -643,10 +710,10 @@
             ctx.fillText(`Score: ${score}`, 10, 650);
 
             // Draw timer 
-            ctx.fillText(`Time: ${time}`, 525, 650);
+            ctx.fillText(`Time: ${time}`, 530, 650);
 
             // Draw stage 
-            ctx.fillText(`Stage: ${stage}`, 250, 650);
+            ctx.fillText(`Stage: ${stage}`, 290, 650);
 
             // Draw pause elements
             if (pauseStatus && pauseCounter > 0){
@@ -664,6 +731,13 @@
             ctx.fillText(`- - Reduce speed`, 520, 530);
             ctx.fillText(`M - Mute music`, 520, 560);
             ctx.fillText(`R - Reset donut position`, 520, 590);
+
+            // border test
+            ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+            ctx.fillRect(150, 250, 50, 50);
+            ctx.fillRect(550, 250, 50, 50);
+            ctx.fillRect(150, 550, 50, 50);
+            ctx.fillRect(550, 550, 50, 50);
         }
 
         if (pauseStatus && pauseCounter === 0){
