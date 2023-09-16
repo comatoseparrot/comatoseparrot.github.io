@@ -93,20 +93,6 @@
         const map = Array.from({ length: mapHeight }, () => Array(mapWidth).fill(false)); 
 
 
-         // blocksInnerBox array
-        for (let col = 2; col <= 11; col++ ){
-            for (let row = 4; row <= 11; row++ ){
-                blocksInnerBox.push([row, col]);
-            }
-        }
-
-        // blocksInnerBox array
-        for (let col = 0; col <= 5; col++ ){
-            for (let row = 0; row <= 5; row++ ){
-                blocksBottom.push([row, col]);
-            }
-        }
-
         // CLASSES
 
         class ObjectControlledClass {
@@ -340,8 +326,6 @@
         // Creating objects - Create objects
         const objectControlled = new ObjectControlledClass(initialX, initialY, null, 30);
         const objectObjective = new ObjectObjectiveClass(randomX, randomY, "red", 30);
-        //const objectObstacle1 = new ObjectObstacleClass(120, 320, "blue", 250, 3);
-        //const objectObstacle2 = new ObjectObstacleClass(120, 120, "blue", 250, 3);
 
         // stage 1 pillars   
         const pillar1 = new ObjectObstacleClass(700, 250, "red", 20, 200);
@@ -367,8 +351,6 @@
         pillar.push(pillar1, pillar2, pillar3, pillar4);
         rain.push(rain1, rain2, rain3, rain4, rain5);
         sides.push(side1, side2, side3, side4);
-
-        // TODO depopulate and repopulate obstacle array depending on stage - Not necessary
     
         // RequestAnimationFrame
         window.requestAnimationFrame = (function () {
@@ -508,50 +490,7 @@
             ctx.fillStyle = 'rgb(248, 248, 242)';
             ctx.fillRect(0, 600, 750, 100);
         }
-
-
-        // Draw blocks from array - not working
-        function drawBlocksFromArray(array, color) {
-            ctx.fillStyle = color;
-            for (const block of array) {
-                const [row, col] = block;
-                map[row][col] = true; // Set the corresponding cell in the map to true
-                const x = col * cellSize;
-                const y = row * cellSize;
-                ctx.fillRect(x, y, cellSize, cellSize);
-            }
-            array.length = 0; // Reset array after drawing
-        }
-
-        // Draw outline from array - not working
-        function drawOutlineFromArray(array, color, lineWidth) {
-            console.log('drawOutlineFromArray called');
-            ctx.lineWidth = lineWidth;
-            ctx.strokeStyle = color;
-            for (const block of array) {
-                const [row, col] = block;
-                map[row][col] = true; // Set the corresponding cell in the map to true
-                const x = col * cellSize;
-                const y = row * cellSize;
-                ctx.strokeRect(x, y, cellSize, cellSize);
-            }
-            array.length = 0; // Reset array after drawing
-        }
-
-        // Stage 1
-        /*
-        function startStage1() {
         
-
-                // Draw pillars
-                
-                pillar1.draw();
-                pillar2.draw();
-                pillar1.movement(4);
-                pillar2.movement(4);
-            }*/
-        
-
         // Manage time 
         function startTimer() {
             if (!pauseStatus){
@@ -652,22 +591,10 @@
 
              // Draw grid test
             //drawGrid();
+
             // Draw array blocks 
-           // drawOutlineFromArray(blocksInnerBox, colorBlack, 3); // Pillar block outline NOT WORKING
-            drawBlocksFromArray(blocksInnerBox, colorBlack); // NOT WORKING
-            drawBlocksFromArray(blocksBottom, colorBlack); // NOT WORKING
-            drawBlocksFromArray(blocksBottom, colorBlack); // NOT WORKING
-            
             drawBoxBottom();
             drawBoxInner();
-
-            // start stage
-            //startStage1();
-            /*
-            if (!pauseStatus && stage === 1){
-            pillar1.draw();
-            pillar2.draw();
-            }*/
 
             // Draw controlled object
             //objectControlled.draw();
@@ -677,6 +604,7 @@
             if (score >= 1000){
             ctx.drawImage(golden, objectControlled.x, objectControlled.y, 30, 30);
             } 
+
             // Draw objective object
             //objectObjective.draw();
             ctx.drawImage(donut, objectObjective.x, objectObjective.y, 30, 30);
@@ -799,11 +727,8 @@
         }
 
         // calling functions
-        // update
-        update();
-
-        // start timer test
-        startTimer();
+        update(); // update
+        startTimer(); // start timer test
 
     </script>
 </body>
